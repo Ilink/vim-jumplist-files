@@ -1,3 +1,6 @@
+"   The VIM LICENSE applies to this script; see ':help copyright'.
+
+
 if exists('g:loaded_jumpf') || (v:version < 700)
     finish
 endif

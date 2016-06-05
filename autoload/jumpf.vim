@@ -1,3 +1,6 @@
+"   The VIM LICENSE applies to this script; see ':help copyright'.
+
+
 function! jumpf#doFileJump(isForward)
     let allJumps = jumpf#common#GetJumps("jumps")
 	let dirJumps = jumpf#common#SliceJumpsInDirection(allJumps, a:isForward)
