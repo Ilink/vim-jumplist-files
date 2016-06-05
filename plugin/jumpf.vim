@@ -3,6 +3,10 @@ if exists('g:loaded_jumpf') || (v:version < 700)
 endif
 let g:loaded_jumpf = 1
 
+" Commands
+"""""""""""""""""""""""""""""""
+com! -bar JumpFileBack call jumpf#jumpBack() 
+com! -bar JumpFileForward call jumpf#jumpForward() 
 
 
 " Mappings
