@@ -1,6 +1,6 @@
-function! jumpf#getFileJumps()
-    let jumps = jumpf#common#GetJumps("jumps")
-	let pastJumps = jumpf#common#SliceJumpsInDirection(jumps, 0)
+function! jumpf#doFileJump(isForward)
+    let allJumps = jumpf#common#GetJumps("jumps")
+	let dirJumps = jumpf#common#SliceJumpsInDirection(allJumps, a:isForward)
 
 	" let curJumpIdx = jumpf#common#GetCurrentIndex(jumps)
     " for [k,v] in items(jumps)
@@ -21,29 +21,44 @@ function! jumpf#getFileJumps()
 	" endfor
 	
     let idx = 0
-    let foundJumpFile = 0
+    let jumpIdx = -1
 
-    for jump in pastJumps
-        let curJumpText = jumpf#common#ParseJumpLine(jump)["text"]
+    for jump in dirJumps 
+        let curJumpDict = jumpf#common#ParseJumpLine(jump)
+        let curJumpText = curJumpDict["text"] 
+        
         if filereadable(curJumpText)
             let curEditedFname = expand("%")
             if curJumpText != curEditedFname
                 " echom "matched " . curJumpText
-                let foundJumpFile = 1
+                let jumpIdx = curJumpDict["count"]
                 break
             endif
         endif
         let idx += 1
     endfor 
 
-    if foundJumpFile
-        " echom "doing jump to " . idx
-        " eval "jump " . idx
-        " execute "g;".idx
-        " execute "normal!" idx . "\<C-o\>"
-        " execute "normal!" . idx . "<C-o>"
-        execute "normal! " . idx . "\<c-o>"
+    if jumpIdx > -1 
+        echom "doing jump to " . jumpIdx 
+        if a:isForward
+            let jumpCmd = "\<c-i>"
+        else
+            let jumpCmd = "\<c-o>"
+        endif
+
+        " This doesnt work if the messages window is open 
+        " (this happens when we are logging things with echom)
+        execute "normal! " . jumpIdx . jumpCmd
     endif
 
 
 endfunction
+
+function! jumpf#jumpForward()
+    call jumpf#doFileJump(1)
+endfunction
+
+function! jumpf#jumpBack()
+    call jumpf#doFileJump(0)
+endfunction
+
