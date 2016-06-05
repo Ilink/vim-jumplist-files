@@ -35,9 +35,11 @@ function! s:GetCurrentIndex( jumps )
 	endif
     endfor
     if l:currentIndex < 0
+	let l:currentIndex = len(a:jumps)-1
+
 	" XXX: Sometimes, the :changes command just outputs the "change line col
 	" text" line, without a ">" line following.
-	throw 'jumpf: jump list does not contain > marker'
+	" throw 'jumpf: jump list does not contain > marker'
     endif
     return l:currentIndex
 endfunction
